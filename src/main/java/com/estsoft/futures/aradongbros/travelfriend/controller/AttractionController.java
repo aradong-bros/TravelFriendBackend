@@ -19,7 +19,7 @@ public class AttractionController
 	@Autowired
 	private AttractionService atrService;
 	
-	// 메인 페이지
+	// 메인 페이지로 간다
 	@RequestMapping("/atrMain")
 	public String getAttractionMain()
 	{
