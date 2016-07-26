@@ -14,8 +14,6 @@
 <body>
 
 	<div>
-		<!-- ★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆ -->
-		<!-- 나중에 Ajax로 바꿔야함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 		<button style="height:80px; width:250px; font-size:20px; font-weight: bold" 
 				onclick="location.href='http://localhost:8080/TravelFriendBackend/attraction/atrInsertform'">새로운 관광지 정보 등록
 		</button>
@@ -62,16 +60,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-

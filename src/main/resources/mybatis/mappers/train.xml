@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="train">
+
+	<select id="selectTrainStation" resultType="trainstationvo">
+		<![CDATA[
+		select * from trainStation
+		]]>
+	</select>
+	
+	<select id="selectTrainInfo" resultType="traininfovo">
+		<![CDATA[
+		select * from trainInfo
+		]]>
+	</select>
+	
+	<select id="selectTrainStationByNo" parameterType="int" resultType="trainstationvo">
+		<![CDATA[
+		select * from trainStation where no = #{no}
+		]]>
+	</select>
+	
+	<insert id="insertTrainStation" parameterType="trainstationvo">
+		<![CDATA[
+		insert into trainStation values(#{no}, #{name})
+		]]>
+	</insert>
+	
+	<delete id="deleteTrainStation" parameterType="int">
+		<![CDATA[
+		delete from trainStation where no = #{no}
+		]]>
+	</delete>
+	
+	<update id="modifyTrainStation" parameterType="map">
+		<![CDATA[
+		update trainStation
+		set no = #{trainStationVo.no}, 
+		    name = #{trainStationVo.name} 
+		where no = #{no}
+		]]>
+	</update>
+</mapper>

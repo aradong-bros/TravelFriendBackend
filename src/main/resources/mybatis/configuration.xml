@@ -5,9 +5,15 @@
 	<!-- ~~.xml 등  매핑파일들의 resultType 이름에 아리아스를 주어 간단히 만든다. -->
 	<typeAliases>
 		<typeAlias type="com.estsoft.futures.aradongbros.travelfriend.vo.AttractionVo" alias="attractionvo"/> <!-- 아리아스는 모두 소문자로 쓰는게 관례. 대문자로 써도 상관은 없다. -->
+		<typeAlias type="com.estsoft.futures.aradongbros.travelfriend.vo.TrainStationVo" alias="trainstationvo"/>
+		<typeAlias type="com.estsoft.futures.aradongbros.travelfriend.vo.TrainCategoryVo" alias="traincategoryvo"/>
+		<typeAlias type="com.estsoft.futures.aradongbros.travelfriend.vo.TrainInfoVo" alias="traininfovo"/>
+		<typeAlias type="com.estsoft.futures.aradongbros.travelfriend.vo.TrainLineVo" alias="trainlinevo"/>
+		<typeAlias type="com.estsoft.futures.aradongbros.travelfriend.vo.TrainOperationRouteVo" alias="trainoperationroutevo"/>
 	</typeAliases>
 	
 	<mappers>
 		<mapper resource="mybatis/mappers/attraction.xml" />   <!-- ~~.xml 파일이 없으면 에러남 -->
+		<mapper resource="mybatis/mappers/train.xml"/>
 	</mappers>
 </configuration>
