@@ -21,9 +21,21 @@
 		]]>
 	</select>
 	
+	<select id="selectTrainInfoByNo" parameterType="int" resultType="traininfovo">
+		<![CDATA[
+		select * from trainInfo where no = #{no}
+		]]>
+	</select>
+	
 	<insert id="insertTrainStation" parameterType="trainstationvo">
 		<![CDATA[
 		insert into trainStation values(#{no}, #{name})
+		]]>
+	</insert>
+	
+	<insert id="insertTrainInfo" parameterType="traininfovo">
+		<![CDATA[
+		insert into trainInfo values(#{no}, #{trainNum}, #{trainModel})
 		]]>
 	</insert>
 	
@@ -33,11 +45,27 @@
 		]]>
 	</delete>
 	
+	<delete id="deleteTrainInfo" parameterType="int">
+		<![CDATA[
+		delete from trainInfo where no = #{no}
+		]]>
+	</delete>
+	
 	<update id="modifyTrainStation" parameterType="map">
 		<![CDATA[
 		update trainStation
 		set no = #{trainStationVo.no}, 
 		    name = #{trainStationVo.name} 
+		where no = #{no}
+		]]>
+	</update>
+	
+	<update id="modifyTrainInfo" parameterType="map">
+		<![CDATA[
+		update trainInfo
+		set no = #{trainInfoVo.no},
+		    trainNum = #{trainInfoVo.trainNum},
+		    trainModel = #{trainInfoVo.trainModel}
 		where no = #{no}
 		]]>
 	</update>

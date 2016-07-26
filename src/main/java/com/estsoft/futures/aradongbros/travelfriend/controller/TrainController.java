@@ -45,6 +45,13 @@ public class TrainController
 		return "/train/trainStationInsert";
 	}
 	
+	//기차 추가 페이지
+	@RequestMapping("/trainInfoInsertform")
+	public String getTrainInfoInsertForm()
+	{
+		return "/train/trainInfoInsert";
+	}
+	
 	//역 추가 처리
 	@RequestMapping("/trainStationInsert")
 	public String insertTrainStationData(@ModelAttribute TrainStationVo trainStationVo)
@@ -54,6 +61,15 @@ public class TrainController
 		return "redirect:/train";
 	}
 	
+	//기차 추가 처리
+	@RequestMapping("/trainInfoInsert")
+	public String insertTrainInfoData(@ModelAttribute TrainInfoVo trainInfoVo)
+	{
+		trainService.insertTrainInfoData(trainInfoVo);
+		
+		return "redirect:/train/trainInfo";
+	}
+	
 	//역 삭제 처리
 	@RequestMapping("/trainStationDelete/{no}")
 	public String deleteTrainStationData(@PathVariable("no")int no)
@@ -61,6 +77,15 @@ public class TrainController
 		trainService.deleteTrainStationData(no);
 		
 		return "redirect:/train";
+	}
+	
+	//기차 삭제 처리
+	@RequestMapping("/trainInfoDelete/{no}")
+	public String deleteTrainInfoData(@PathVariable("no")int no)
+	{
+		trainService.deleteTrainInfoData(no);
+		
+		return "redirect:/train/trainInfo";
 	}
 	
 	//역 수정 페이지
@@ -73,6 +98,16 @@ public class TrainController
 		return "train/trainStationModify";
 	}
 	
+	//기차 수정 페이지
+	@RequestMapping("/trainInfoModifyform/{no}")
+	public String getTrainInfoModifyForm(@PathVariable("no")int no, Model model)
+	{
+		TrainInfoVo trainInfoVo = trainService.selectTrainInfoByNo(no);
+		model.addAttribute("trainInfoVo", trainInfoVo);
+		
+		return "train/trainInfoModify";
+	}
+	
 	//역 수정 처리
 	@RequestMapping("/trainStationModify/{no}")
 	public String modifyTrainStationData(@PathVariable("no")int no, 
@@ -81,5 +116,15 @@ public class TrainController
 		trainService.modifyTrainStationData(trainStationVo, no);
 		
 		return "redirect:/train";
+	}
+	
+	//기차 수정 처리
+	@RequestMapping("/trainInfoModify/{no}")
+	public String modifyTrainInfoData(@PathVariable("no")int no,
+									@ModelAttribute TrainInfoVo trainInfoVo)
+	{
+		trainService.modifyTrainInfoData(trainInfoVo, no);
+		
+		return "redirect:/train/trainInfo";
 	}
 }

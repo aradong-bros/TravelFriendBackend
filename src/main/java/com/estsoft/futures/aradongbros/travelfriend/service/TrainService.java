@@ -33,10 +33,20 @@ public class TrainService
 	{
 		trainDao.insertTrainStationData(trainStationVo);
 	}
+	
+	public void insertTrainInfoData(TrainInfoVo trainInfoVo)
+	{
+		trainDao.insertTrainInfoData(trainInfoVo);
+	}
 
 	public void deleteTrainStationData(int no) 
 	{
 		trainDao.deleteTrainStationData(no);
+	}
+	
+	public void deleteTrainInfoData(int no) 
+	{
+		trainDao.deleteTrainInfoData(no);
 	}
 
 	public TrainStationVo selectTrainStationByNo(int no) 
@@ -45,8 +55,20 @@ public class TrainService
 		
 		return trainStationVo;
 	}
+	
+	public TrainInfoVo selectTrainInfoByNo(int no)
+	{
+		TrainInfoVo trainInfoVo = trainDao.selectTrainInfoByNo(no);
+		
+		return trainInfoVo;
+	}
 
-	public void modifyTrainStationData(TrainStationVo trainStationVo, int no) {
+	public void modifyTrainStationData(TrainStationVo trainStationVo, int no) 
+	{
 		trainDao.modifyTrainStationData(trainStationVo, no);
+	}
+
+	public void modifyTrainInfoData(TrainInfoVo trainInfoVo, int no) {
+		trainDao.modifyTrainInfoData(trainInfoVo, no);
 	}
 }

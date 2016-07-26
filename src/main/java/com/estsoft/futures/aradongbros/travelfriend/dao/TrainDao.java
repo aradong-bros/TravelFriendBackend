@@ -35,18 +35,34 @@ public class TrainDao
 	{
 		sqlSession.insert("train.insertTrainStation", trainStationVo);
 	}
+	
+	public void insertTrainInfoData(TrainInfoVo trainInfoVo) 
+	{
+		sqlSession.insert("train.insertTrainInfo", trainInfoVo);
+	}
 
 	public void deleteTrainStationData(int no) 
 	{
 		sqlSession.delete("train.deleteTrainStation", no);
 	}
+	
+	public void deleteTrainInfoData(int no) 
+	{
+		sqlSession.delete("train.deleteTrainInfo", no);
+	}
 
 	public TrainStationVo selectTrainStationByNo(int no) 
 	{
-		System.out.println(no);
 		TrainStationVo trainStationVo = sqlSession.selectOne("train.selectTrainStationByNo", no);
 		
 		return trainStationVo;
+	}
+	
+	public TrainInfoVo selectTrainInfoByNo(int no) 
+	{
+		TrainInfoVo trainInfoVo = sqlSession.selectOne("train.selectTrainInfoByNo", no);
+		
+		return trainInfoVo;
 	}
 
 	public void modifyTrainStationData(TrainStationVo trainStationVo, int no) 
@@ -56,5 +72,13 @@ public class TrainDao
 		map.put("no", no);
 		
 		sqlSession.update("train.modifyTrainStation", map);
+	}
+
+	public void modifyTrainInfoData(TrainInfoVo trainInfoVo, int no) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("trainInfoVo", trainInfoVo);
+		map.put("no", no);
+		
+		sqlSession.update("train.modifyTrainInfo", map);
 	}
 }

@@ -4,20 +4,22 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>역 정보 수정</title>
+<title>기차 정보 수정</title>
 </head>
 <body>
-	<form action="${pageContext.request.contextPath}/train/trainStationModify/${trainStationVo.no}" method="post">
+	<form action="${pageContext.request.contextPath}/train/trainInfoModify/${trainInfoVo.no}" method="post">
 		<table border="1" style="text-align:center;">
 			<tr>
 				<th>no</th>
-				<th>name</th>
+				<th>trainNum</th>
+				<th>trainModel</th>
 				<th>수정/ 취소</th>
 			</tr>
 			
 			<tr>
-				<td><input type="text" name="no" value="${trainStationVo.no}"></td>
-				<td><input type="text" name="name" value="${trainStationVo.name}"></td>
+				<td><input type="text" name="no" value="${trainInfoVo.no}"></td>
+				<td><input type="text" name="trainNum" value="${trainInfoVo.trainNum}"></td>
+				<td><input type="text" name="trainModel" value="${trainInfoVo.trainModel}"></td>
 				<td>
 					<input type="submit" value="수정 확인">
 					<input type="button" value="취소" onclick="window.history.back()" />
