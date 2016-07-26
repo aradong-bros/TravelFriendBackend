@@ -15,6 +15,12 @@
 		]]>
 	</select>
 	
+	<select id="selectTrainLine" resultType="trainlinevo">
+		<![CDATA[
+		select * from trainLine
+		]]>
+	</select>
+	
 	<select id="selectTrainStationByNo" parameterType="int" resultType="trainstationvo">
 		<![CDATA[
 		select * from trainStation where no = #{no}
@@ -24,6 +30,12 @@
 	<select id="selectTrainInfoByNo" parameterType="int" resultType="traininfovo">
 		<![CDATA[
 		select * from trainInfo where no = #{no}
+		]]>
+	</select>
+	
+	<select id="selectTrainLineByNo" parameterType="int" resultType="trainlinevo">
+		<![CDATA[
+		select * from trainLine where no = #{no}
 		]]>
 	</select>
 	
@@ -39,6 +51,12 @@
 		]]>
 	</insert>
 	
+	<insert id="insertTrainLine" parameterType="trainlinevo">
+		<![CDATA[
+		insert into trainLine values(#{no}, #{name}, #{orientation})
+		]]>
+	</insert>
+	
 	<delete id="deleteTrainStation" parameterType="int">
 		<![CDATA[
 		delete from trainStation where no = #{no}
@@ -48,6 +66,12 @@
 	<delete id="deleteTrainInfo" parameterType="int">
 		<![CDATA[
 		delete from trainInfo where no = #{no}
+		]]>
+	</delete>
+	
+	<delete id="deleteTrainLine" parameterType="int">
+		<![CDATA[
+		delete from trainLine where no = #{no}
 		]]>
 	</delete>
 	
@@ -66,6 +90,16 @@
 		set no = #{trainInfoVo.no},
 		    trainNum = #{trainInfoVo.trainNum},
 		    trainModel = #{trainInfoVo.trainModel}
+		where no = #{no}
+		]]>
+	</update>
+	
+	<update id="modifyTrainLine" parameterType="map">
+		<![CDATA[
+		update trainLine
+		set no = #{trainLineVo.no},
+		    name = #{trainLineVo.name},
+		    orientation = #{trainLineVo.orientation}
 		where no = #{no}
 		]]>
 	</update>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.estsoft.futures.aradongbros.travelfriend.dao.TrainDao;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainInfoVo;
+import com.estsoft.futures.aradongbros.travelfriend.vo.TrainLineVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainStationVo;
 
 @Service
@@ -28,6 +29,13 @@ public class TrainService
 		
 		return trainInfoList;
 	}
+	
+	public List<TrainLineVo> getTrainLineList() 
+	{
+		List<TrainLineVo> trainLineList = trainDao.selectTrainLineList();
+		
+		return trainLineList;
+	}
 
 	public void insertTrainStationData(TrainStationVo trainStationVo) 
 	{
@@ -38,6 +46,11 @@ public class TrainService
 	{
 		trainDao.insertTrainInfoData(trainInfoVo);
 	}
+	
+	public void insertTrainInfoData(TrainLineVo trainLineVo) 
+	{
+		trainDao.insertTrainLineData(trainLineVo);
+	}
 
 	public void deleteTrainStationData(int no) 
 	{
@@ -47,6 +60,11 @@ public class TrainService
 	public void deleteTrainInfoData(int no) 
 	{
 		trainDao.deleteTrainInfoData(no);
+	}
+	
+	public void deleteTrainLineData(int no) 
+	{
+		trainDao.deleteTrainLineData(no);
 	}
 
 	public TrainStationVo selectTrainStationByNo(int no) 
@@ -62,6 +80,13 @@ public class TrainService
 		
 		return trainInfoVo;
 	}
+	
+	public TrainLineVo selectTrainLineByNo(int no) 
+	{
+		TrainLineVo trainLineVo = trainDao.selectTrainLineByNo(no);
+		
+		return trainLineVo;
+	}
 
 	public void modifyTrainStationData(TrainStationVo trainStationVo, int no) 
 	{
@@ -70,5 +95,9 @@ public class TrainService
 
 	public void modifyTrainInfoData(TrainInfoVo trainInfoVo, int no) {
 		trainDao.modifyTrainInfoData(trainInfoVo, no);
+	}
+
+	public void modifyTrainLineData(TrainLineVo trainLineVo, int no) {
+		trainDao.modifyTrainLineData(trainLineVo, no);
 	}
 }

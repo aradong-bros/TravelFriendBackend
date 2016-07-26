@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.estsoft.futures.aradongbros.travelfriend.service.TrainService;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainInfoVo;
+import com.estsoft.futures.aradongbros.travelfriend.vo.TrainLineVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainStationVo;
 
 @Controller
@@ -38,6 +39,15 @@ public class TrainController
 		return "/train/trainInfoList";
 	}
 	
+	//노선 조회 페이지
+	@RequestMapping("/trainLine")
+	public String getTrainLine(Model model)
+	{
+		List<TrainLineVo> trainLineList = trainService.getTrainLineList();
+		model.addAttribute("trainLineList", trainLineList);
+		return "/train/trainLineList";
+	}
+	
 	//역 추가 페이지
 	@RequestMapping("/trainStationInsertform")
 	public String getTrainStationInsertForm()
@@ -50,6 +60,13 @@ public class TrainController
 	public String getTrainInfoInsertForm()
 	{
 		return "/train/trainInfoInsert";
+	}
+	
+	//노선 추가 페이지
+	@RequestMapping("/trainLineInsertform")
+	public String getTrainLineInsertForm()
+	{
+		return "/train/trainLineInsert";
 	}
 	
 	//역 추가 처리
@@ -70,6 +87,15 @@ public class TrainController
 		return "redirect:/train/trainInfo";
 	}
 	
+	//노선 추가 처리
+	@RequestMapping("/trainLineInsert")
+	public String insertTrainLineData(@ModelAttribute TrainLineVo trainLineVo)
+	{
+		trainService.insertTrainInfoData(trainLineVo);
+		
+		return "redirect:/train/trainLine";
+	}
+	
 	//역 삭제 처리
 	@RequestMapping("/trainStationDelete/{no}")
 	public String deleteTrainStationData(@PathVariable("no")int no)
@@ -86,6 +112,15 @@ public class TrainController
 		trainService.deleteTrainInfoData(no);
 		
 		return "redirect:/train/trainInfo";
+	}
+	
+	//노선 삭제 처리
+	@RequestMapping("/trainLineDelete/{no}")
+	public String deleteTrainLineData(@PathVariable("no")int no)
+	{
+		trainService.deleteTrainLineData(no);
+		
+		return "redirect:/train/trainLine";
 	}
 	
 	//역 수정 페이지
@@ -108,6 +143,16 @@ public class TrainController
 		return "train/trainInfoModify";
 	}
 	
+	//노선 수정 페이지
+	@RequestMapping("/trainLineModifyform/{no}")
+	public String getTrainLineModifyForm(@PathVariable("no")int no, Model model)
+	{
+		TrainLineVo trainLineVo = trainService.selectTrainLineByNo(no);
+		model.addAttribute("trainLineVo", trainLineVo);
+		
+		return "train/trainLineModify";
+	}
+	
 	//역 수정 처리
 	@RequestMapping("/trainStationModify/{no}")
 	public String modifyTrainStationData(@PathVariable("no")int no, 
@@ -126,5 +171,15 @@ public class TrainController
 		trainService.modifyTrainInfoData(trainInfoVo, no);
 		
 		return "redirect:/train/trainInfo";
+	}
+	
+	//노선 수정 처리
+	@RequestMapping("/trainLineModify/{no}")
+	public String modifyTrainLineData(@PathVariable("no")int no,
+									@ModelAttribute TrainLineVo trainLineVo)
+	{
+		trainService.modifyTrainLineData(trainLineVo, no);
+		
+		return "redirect:/train/trainLine";
 	}
 }

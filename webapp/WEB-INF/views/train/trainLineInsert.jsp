@@ -4,10 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>기차 정보 입력</title>
+<title>노선 정보 입력</title>
 </head>
 <body>
-	<form id="trainInfoInsertForm" action="${pageContext.request.contextPath}/train/trainInfoInsert" method="post">
+	<form id="trainLineInsertForm" action="${pageContext.request.contextPath}/train/trainLineInsert" method="post">
 		<table border="1" style="text-align:center;">
 			<tr>
 				<th>항목</th>
@@ -21,14 +21,14 @@
 				<td>비고없음</td>
 			</tr>
 			<tr>
-				<td>trainNum</td>
-				<td><input type="text" name="trainNum" id="trainNumText" size="20"></td>
+				<td>name</td>
+				<td><input type="text" name="name" id="nameText" size="20"></td>
 				<td>비고없음</td>
 			</tr>
 			<tr>
-				<td>trainModel</td>
-				<td><input type="text" name="trainModel" id="trainModelText" size="20"></td>
-				<td>비고없음</td>
+				<td>orientation</td>
+				<td><input type="text" name="orientation" id="orientationText" size="20"></td>
+				<td>up, down</td>
 			</tr>
 			<tr>
 				<td colspan="3" align="right">

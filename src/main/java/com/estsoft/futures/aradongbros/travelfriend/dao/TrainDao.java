@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainInfoVo;
+import com.estsoft.futures.aradongbros.travelfriend.vo.TrainLineVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainStationVo;
 
 @Repository
@@ -26,9 +27,15 @@ public class TrainDao
 	
 	public List<TrainInfoVo> selectTrainInfoList()
 	{
-		List<TrainInfoVo> trainInfoVoList = sqlSession.selectList("train.selectTrainInfo");
+		List<TrainInfoVo> trainInfoList = sqlSession.selectList("train.selectTrainInfo");
 		
-		return trainInfoVoList;
+		return trainInfoList;
+	}
+	
+	public List<TrainLineVo> selectTrainLineList() {
+		List<TrainLineVo> trainLineList = sqlSession.selectList("train.selectTrainLine");
+		
+		return trainLineList;
 	}
 
 	public void insertTrainStationData(TrainStationVo trainStationVo) 
@@ -40,6 +47,11 @@ public class TrainDao
 	{
 		sqlSession.insert("train.insertTrainInfo", trainInfoVo);
 	}
+	
+	public void insertTrainLineData(TrainLineVo trainLineVo) 
+	{
+		sqlSession.insert("train.insertTrainLine", trainLineVo);
+	}
 
 	public void deleteTrainStationData(int no) 
 	{
@@ -49,6 +61,11 @@ public class TrainDao
 	public void deleteTrainInfoData(int no) 
 	{
 		sqlSession.delete("train.deleteTrainInfo", no);
+	}
+	
+	public void deleteTrainLineData(int no) 
+	{
+		sqlSession.delete("train.deleteTrainLine", no);
 	}
 
 	public TrainStationVo selectTrainStationByNo(int no) 
@@ -63,6 +80,12 @@ public class TrainDao
 		TrainInfoVo trainInfoVo = sqlSession.selectOne("train.selectTrainInfoByNo", no);
 		
 		return trainInfoVo;
+	}
+	
+	public TrainLineVo selectTrainLineByNo(int no) {
+		TrainLineVo trainLineVo = sqlSession.selectOne("train.selectTrainLineByNo", no);
+		
+		return trainLineVo;
 	}
 
 	public void modifyTrainStationData(TrainStationVo trainStationVo, int no) 
@@ -80,5 +103,13 @@ public class TrainDao
 		map.put("no", no);
 		
 		sqlSession.update("train.modifyTrainInfo", map);
+	}
+
+	public void modifyTrainLineData(TrainLineVo trainLineVo, int no) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("trainLineVo", trainLineVo);
+		map.put("no", no);
+		
+		sqlSession.update("train.modifyTrainLine", map);
 	}
 }
