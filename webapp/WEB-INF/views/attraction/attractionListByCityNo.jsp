@@ -17,22 +17,25 @@
 		<!-- ★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆ -->
 		<!-- 나중에 Ajax로 바꿔야함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 		<button style="height:80px; width:250px; font-size:20px; font-weight: bold" 
-				onclick="location.href='http://localhost:8080/TravelFriendBackend/attraction/atrInsertform'">새로운 관광지 정보 등록
+				onclick="location.href='${pageContext.request.contextPath}/attraction/atrInsertform'">새로운 관광지 정보 등록
 		</button>
 		
 			<span></span>
 		
 		<button style="height:80px; width:250px; font-size:20px; font-weight: bold" 
-				onclick="location.href='http://localhost:8080/TravelFriendBackend/attraction/atrMain'">메인으로 돌아가기
+				onclick="location.href='${pageContext.request.contextPath}/attraction/atrMain'">메인으로 돌아가기
 		</button>
 		
-		<br><br>
+			<span></span>
+			
+		<h1>${clVo.name },   지역코드 : ${clVo.areaCode },  시군구코드 : ${clVo.sigunguCode }</h1>
 		
 		<table border="1" style="text-align: center;">
 			<tr>
 				<th style="height:30px; width:150px;">관광지 번호</th>
-				<th style="height:30px; width:150px;">지역 번호</th>
+				<th style="height:30px; width:150px;">지역 이름</th>
 				<th style="height:30px; width:150px;">관광지 이름</th>
+				<th style="height:30px; width:150px;">관광지 주소</th>
 				<th style="height:30px; width:150px;">관광지 위치(y,x)</th>
 				<th style="height:30px; width:150px;">관광지 사진</th>
 				<th style="height:30px; width:150px;">관광지 정보</th>
@@ -42,17 +45,18 @@
 			
 			<c:forEach items="${atrList}" var="atrVo" varStatus="status">
 			<tr>
-				<td>${atrVo.postList_no }</td>
-				<td>${atrVo.cityList_no }</td>
-				<td>${atrVo.postList_name }</td>
-				<td>${atrVo.postList_location }</td>
-				<td>${atrVo.postList_picture }</td>
-				<td>${atrVo.postList_info }</td>
-				<td>${atrVo.postList_category }</td>
+				<td>${atrVo.no }</td>
+				<td>${clVo.name }</td>
+				<td>${atrVo.name }</td>
+				<td>${atrVo.address }</td>
+				<td>${atrVo.location }</td>
+				<td>${atrVo.picture }</td>
+				<td>${atrVo.info }</td>
+				<td>${atrVo.category }</td>
 				<td>
-					<button onclick="location.href='http://localhost:8080/TravelFriendBackend/attraction/atrModifyform/${atrVo.postList_no}'">수정</button> 
+					<button onclick="location.href='${pageContext.request.contextPath}/attraction/atrModifyform/${atrVo.no}'">수정</button> 
 					<span></span>
-					<button onclick="location.href='http://localhost:8080/TravelFriendBackend/attraction/atrDeleteform/${atrVo.postList_no}'">삭제</button> 
+					<button onclick="location.href='${pageContext.request.contextPath}/attraction/atrDeleteform/${atrVo.no}'">삭제</button> 
 				</td>
 				
 			</tr>
@@ -62,16 +66,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-

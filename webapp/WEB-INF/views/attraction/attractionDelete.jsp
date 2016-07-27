@@ -10,26 +10,28 @@
 
 	<table border="1" style="text-align: center;">
 		<tr>
-			<th style="height: 30px; width: 150px;">관광지 번호</th>
-			<th style="height: 30px; width: 150px;">지역 번호</th>
-			<th style="height: 30px; width: 150px;">관광지 이름</th>
-			<th style="height: 30px; width: 150px;">관광지 위치(y,x)</th>
-			<th style="height: 30px; width: 150px;">관광지 사진</th>
-			<th style="height: 30px; width: 150px;">관광지 정보</th>
-			<th style="height: 30px; width: 150px;">관광지 카테고리</th>
+				<th style="height:30px; width:150px;">관광지 번호</th>
+				<th style="height:30px; width:150px;">지역 이름</th>
+				<th style="height:30px; width:150px;">관광지 이름</th>
+				<th style="height:30px; width:150px;">관광지 주소</th>
+				<th style="height:30px; width:150px;">관광지 위치(y,x)</th>
+				<th style="height:30px; width:150px;">관광지 사진</th>
+				<th style="height:30px; width:150px;">관광지 정보</th>
+				<th style="height:30px; width:150px;">관광지 카테고리</th>
 			<th style="height: 30px; width: 150px;">삭제 / 취소</th>
 		</tr>
 
 			<tr>
-				<td>${atrVo.postList_no }</td>
-				<td>${atrVo.cityList_no }</td>
-				<td>${atrVo.postList_name }</td>
-				<td>${atrVo.postList_location }</td>
-				<td>${atrVo.postList_picture }</td>
-				<td>${atrVo.postList_info }</td>
-				<td>${atrVo.postList_category }</td>
+				<td>${atrVo.no }</td>
+				<td>${clVo.name }</td>
+				<td>${atrVo.name }</td>
+				<td>${atrVo.address }</td>
+				<td>${atrVo.location }</td>
+				<td>${atrVo.picture }</td>
+				<td>${atrVo.info }</td>
+				<td>${atrVo.category }</td>
 				<td>
-					<button onclick="location.href='http://localhost:8080/TravelFriendBackend/attraction/atrDelete/${atrVo.postList_no}'">삭제 확인</button>
+					<button onclick="location.href='${pageContext.request.contextPath}/attraction/atrDelete/${atrVo.no}'">삭제 확인</button>
 						<span></span> 
 					<input type="button" value="취소" onclick="window.history.back()" />
 				</td>

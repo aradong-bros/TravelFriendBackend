@@ -7,28 +7,30 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="http://localhost:8080/TravelFriendBackend/attraction/atrModify/${atrVo.postList_no }" method="post">
+	<form action="${pageContext.request.contextPath}/attraction/atrModify/${atrVo.no }" method="post">
 		<table border="1" style="text-align: center;">
 			<tr>
-				<th style="height: 30px; width: 150px;">관광지 번호</th>
-				<th style="height: 30px; width: 150px;">지역 번호</th>
-				<th style="height: 30px; width: 150px;">관광지 이름</th>
-				<th style="height: 30px; width: 150px;">관광지 위치(y,x)</th>
-				<th style="height: 30px; width: 150px;">관광지 사진</th>
-				<th style="height: 30px; width: 150px;">관광지 정보</th>
-				<th style="height: 30px; width: 150px;">관광지 카테고리</th>
+				<th style="height:30px; width:150px;">관광지 번호</th>
+				<th style="height:30px; width:150px;">지역 이름</th>
+				<th style="height:30px; width:150px;">관광지 이름</th>
+				<th style="height:30px; width:150px;">관광지 주소</th>
+				<th style="height:30px; width:150px;">관광지 위치(y,x)</th>
+				<th style="height:30px; width:150px;">관광지 사진</th>
+				<th style="height:30px; width:150px;">관광지 정보</th>
+				<th style="height:30px; width:150px;">관광지 카테고리</th>
 				<th style="height: 30px; width: 150px;">수정 / 취소</th>
 			</tr>
 	
 			
 			<tr>
-				<td>${atrVo.postList_no }</td>
-				<td>${atrVo.cityList_no }</td>
-				<td><input type="text" name="postList_name" value="${atrVo.postList_name }"></td>
-				<td><input type="text" name="postList_location" value="${atrVo.postList_location }"></td>
-				<td><input type="text" name="postList_picture" value="${atrVo.postList_picture }"></td>
-				<td><input type="text" name="postList_info" value="${atrVo.postList_info }"></td>
-				<td><input type="text" name="postList_category" value="${atrVo.postList_category }"></td>
+				<td>${atrVo.no }</td>
+				<td>${clVo.name }</td>
+				<td><input type="text" name="name" value="${atrVo.name }"></td>
+				<td><input type="text" name="address" value="${atrVo.address }"></td>
+				<td><input type="text" name="location" value="${atrVo.location }"></td>
+				<td><input type="text" name="picture" value="${atrVo.picture }"></td>
+				<td><input type="text" name="info" value="${atrVo.info }"></td>
+				<td><input type="text" name="category" value="${atrVo.category }"></td>
 				<td>
 					<input type="submit" value="수정 확인">
 						<span></span> 
