@@ -63,9 +63,17 @@ public class TrainOperationRouteVo {
 		return departureTime;
 	}
 	
-	public void setDepartureTime(Time departureTime) {
-		this.departureTime = departureTime;
+	public void setDepartureTime(String departureTime) {
+		String timeStr[] = departureTime.split(":");
+		int hour = Integer.parseInt(timeStr[0]);
+		int minute = Integer.parseInt(timeStr[1]);
+		int seceond = Integer.parseInt(timeStr[2]);
+		this.departureTime = new Time(hour, minute, seceond);
 	}
+	
+//	public void setDepartureTime(Time departureTime) {
+//		this.departureTime = departureTime;
+//	}
 	
 	@Override
 	public String toString() {

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainCategoryVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainInfoVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainLineVo;
+import com.estsoft.futures.aradongbros.travelfriend.vo.TrainOperationRouteVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainStationVo;
 
 @Repository
@@ -46,6 +47,13 @@ public class TrainDao
 		
 		return trainCategoryList;
 	}
+	
+	public List<TrainOperationRouteVo> selectTrainOperationRouteList() 
+	{
+		List<TrainOperationRouteVo> trainOperationRouteList = sqlSession.selectList("train.selectTrainOperationRoute");
+		
+		return trainOperationRouteList;
+	}
 
 	public void insertTrainStationData(TrainStationVo trainStationVo) 
 	{
@@ -66,6 +74,11 @@ public class TrainDao
 	{
 		sqlSession.insert("train.insertTrainCategory", trainCategoryVo);
 	}
+	
+	public void insertTrainOperationRouteData(TrainOperationRouteVo trainOperationRouteVo) 
+	{
+		sqlSession.insert("train.insertTrainOperationRoute", trainOperationRouteVo);
+	}
 
 	public void deleteTrainStationData(int no) 
 	{
@@ -85,6 +98,11 @@ public class TrainDao
 	public void deleteTrainCategoryData(int no) 
 	{
 		sqlSession.delete("train.deleteTrainCategory", no);
+	}
+	
+	public void deleteTrainOperationRouteData(int no) 
+	{
+		sqlSession.delete("train.deleteTrainOperationRoute", no);
 	}
 
 	public TrainStationVo selectTrainStationByNo(int no) 
@@ -113,6 +131,13 @@ public class TrainDao
 		TrainCategoryVo trainCategoryVo = sqlSession.selectOne("train.selectTrainCategoryByNo", no);
 		
 		return trainCategoryVo;
+	}
+	
+	public TrainOperationRouteVo selectTrainOperationRouteByNo(int no) 
+	{
+		TrainOperationRouteVo trainOperationRouteVo = sqlSession.selectOne("train.selectTrainOperationRouteByNo", no);
+		
+		return trainOperationRouteVo;
 	}
 
 	public void modifyTrainStationData(TrainStationVo trainStationVo, int no) 
@@ -149,5 +174,14 @@ public class TrainDao
 		map.put("no", no);
 		
 		sqlSession.update("train.modifyTrainCategory", map);
+	}
+
+	public void modifyTrainOperationData(TrainOperationRouteVo trainOperationRouteVo, int no) 
+	{
+		Map<String, Object> map = new HashMap<>();
+		map.put("trainOperationRouteVo", trainOperationRouteVo);
+		map.put("no", no);
+		
+		sqlSession.update("train.modifyTrainOperationRoute", map);
 	}
 }

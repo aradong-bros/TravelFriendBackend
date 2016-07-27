@@ -9,6 +9,7 @@ import com.estsoft.futures.aradongbros.travelfriend.dao.TrainDao;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainCategoryVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainInfoVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainLineVo;
+import com.estsoft.futures.aradongbros.travelfriend.vo.TrainOperationRouteVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainStationVo;
 
 @Service
@@ -44,6 +45,13 @@ public class TrainService
 		
 		return trainCategoryList;
 	}
+	
+	public List<TrainOperationRouteVo> getTrainOperationRouteList() 
+	{
+		List<TrainOperationRouteVo> trainOperationRouteList = trainDao.selectTrainOperationRouteList();
+		
+		return trainOperationRouteList;
+	}
 
 	public void insertTrainStationData(TrainStationVo trainStationVo) 
 	{
@@ -64,6 +72,11 @@ public class TrainService
 	{
 		trainDao.insertTrainCategoryData(trainCategoryVo);
 	}
+	
+	public void insertTrainOperationRouteData(TrainOperationRouteVo trainOperationRouteVo) 
+	{
+		trainDao.insertTrainOperationRouteData(trainOperationRouteVo);
+	}
 
 	public void deleteTrainStationData(int no) 
 	{
@@ -83,6 +96,11 @@ public class TrainService
 	public void deleteTrainCategoryData(int no) 
 	{
 		trainDao.deleteTrainCategoryData(no);
+	}
+	
+	public void deleteTrainOperationRouteData(int no) 
+	{
+		trainDao.deleteTrainOperationRouteData(no);
 	}
 
 	public TrainStationVo selectTrainStationByNo(int no) 
@@ -112,6 +130,13 @@ public class TrainService
 		
 		return trainCategoryVo;
 	}
+	
+	public TrainOperationRouteVo selectTrainOperationRouteByNo(int no) 
+	{
+		TrainOperationRouteVo trainOperationRouteVo = trainDao.selectTrainOperationRouteByNo(no);
+		
+		return trainOperationRouteVo;
+	}
 
 	public void modifyTrainStationData(TrainStationVo trainStationVo, int no) 
 	{
@@ -131,5 +156,10 @@ public class TrainService
 	public void modifyTrainCategoryData(TrainCategoryVo trainCategoryVo, int no) 
 	{
 		trainDao.modifyTrainCategoryData(trainCategoryVo, no);
+	}
+
+	public void modifyTrainOperationRouteData(TrainOperationRouteVo trainOperationRouteVo, int no) 
+	{
+		trainDao.modifyTrainOperationData(trainOperationRouteVo, no);
 	}
 }

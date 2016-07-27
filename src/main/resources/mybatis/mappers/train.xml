@@ -27,6 +27,12 @@
 		]]>
 	</select>
 	
+	<select id="selectTrainOperationRoute" resultType="trainoperationroutevo">
+		<![CDATA[
+		select * from trainOperationRoute
+		]]>
+	</select>
+	
 	<select id="selectTrainStationByNo" parameterType="int" resultType="trainstationvo">
 		<![CDATA[
 		select * from trainStation where no = #{no}
@@ -48,6 +54,12 @@
 	<select id="selectTrainCategoryByNo" parameterType="int" resultType="traincategoryvo">
 		<![CDATA[
 		select * from trainCategory where no = #{no}
+		]]>
+	</select>
+	
+	<select id="selectTrainOperationRouteByNo" parameterType="int" resultType="trainoperationroutevo">
+		<![CDATA[
+		select * from trainOperationRoute where no = #{no}
 		]]>
 	</select>
 	
@@ -75,6 +87,12 @@
 		]]>
 	</insert>
 	
+	<insert id="insertTrainOperationRoute" parameterType="trainoperationroutevo">
+		<![CDATA[
+		insert into trainOperationRoute values(#{no}, #{trainInfo_no}, #{trainLine_no}, #{trainStation_no}, #{trainCategory_no}, #{order}, #{departureTime});
+		]]>
+	</insert>
+	
 	<delete id="deleteTrainStation" parameterType="int">
 		<![CDATA[
 		delete from trainStation where no = #{no}
@@ -96,6 +114,12 @@
 	<delete id="deleteTrainCategory" parameterType="int">
 		<![CDATA[
 		delete from trainCategory where no = #{no}
+		]]>
+	</delete>
+	
+	<delete id="deleteTrainOperationRoute" parameterType="int">
+		<![CDATA[
+		delete from trainOperationRoute where no = #{no}
 		]]>
 	</delete>
 	
@@ -133,6 +157,20 @@
 		update trainCategory
 		set no = #{trainCategoryVo.no},
 		    workDate = #{trainCategoryVo.workDate}
+		where no = #{no}
+		]]>
+	</update>
+	
+	<update id="modifyTrainOperationRoute" parameterType="map">
+		<![CDATA[
+		update trainOperationRoute
+		set no = #{trainOperationRouteVo.no},
+		    trainInfo_no = #{trainOperationRouteVo.trainInfo_no},
+		    trainLine_no = #{trainOperationRouteVo.trainLine_no},
+		    trainStation_no = #{trainOperationRouteVo.trainStation_no},
+		    trainCategory_no = #{trainOperationRouteVo.trainCategory_no},
+		    `order` = #{trainOperationRouteVo.order},
+		    departureTime = #{trainOperationRouteVo.departureTime}
 		where no = #{no}
 		]]>
 	</update>
