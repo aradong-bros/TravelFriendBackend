@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.estsoft.futures.aradongbros.travelfriend.service.TrainService;
+import com.estsoft.futures.aradongbros.travelfriend.vo.TrainCategoryVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainInfoVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainLineVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainStationVo;
@@ -48,6 +49,15 @@ public class TrainController
 		return "/train/trainLineList";
 	}
 	
+	//카테고리 조회 페이지
+	@RequestMapping("/trainCategory")
+	public String getTrainCategory(Model model)
+	{
+		List<TrainCategoryVo> trainCategoryList = trainService.getTrainCategoryList();
+		model.addAttribute("trainCategoryList", trainCategoryList);
+		return "/train/trainCategoryList";
+	}
+	
 	//역 추가 페이지
 	@RequestMapping("/trainStationInsertform")
 	public String getTrainStationInsertForm()
@@ -67,6 +77,13 @@ public class TrainController
 	public String getTrainLineInsertForm()
 	{
 		return "/train/trainLineInsert";
+	}
+	
+	//카테고리 추가 페이지
+	@RequestMapping("/trainCategoryInsertform")
+	public String getTrainCategoryInsertForm()
+	{
+		return "/train/trainCategoryInsert";
 	}
 	
 	//역 추가 처리
@@ -96,6 +113,15 @@ public class TrainController
 		return "redirect:/train/trainLine";
 	}
 	
+	//카테고리 추가 처리
+	@RequestMapping("/trainCategoryInsert")
+	public String insertTrainCategoryData(@ModelAttribute TrainCategoryVo trainCategoryVo)
+	{
+		trainService.insertTrainCategoryData(trainCategoryVo);
+		
+		return "redirect:/train/trainCategory";
+	}
+	
 	//역 삭제 처리
 	@RequestMapping("/trainStationDelete/{no}")
 	public String deleteTrainStationData(@PathVariable("no")int no)
@@ -121,6 +147,15 @@ public class TrainController
 		trainService.deleteTrainLineData(no);
 		
 		return "redirect:/train/trainLine";
+	}
+	
+	//카테고리 삭제 처리
+	@RequestMapping("/trainCategoryDelete/{no}")
+	public String deleteTrainCategoryData(@PathVariable("no")int no)
+	{
+		trainService.deleteTrainCategoryData(no);
+		
+		return "redirect:/train/trainCategory";
 	}
 	
 	//역 수정 페이지
@@ -153,6 +188,16 @@ public class TrainController
 		return "train/trainLineModify";
 	}
 	
+	//카테고리 수정 페이지
+	@RequestMapping("/trainCategoryModifyform/{no}")
+	public String getTrainCategoryModifyForm(@PathVariable("no")int no, Model model)
+	{
+		TrainCategoryVo trainCategoryVo = trainService.selectTrainCategoryByNo(no);
+		model.addAttribute("trainCategoryVo", trainCategoryVo);
+		
+		return "train/trainCategoryModify";
+	}
+	
 	//역 수정 처리
 	@RequestMapping("/trainStationModify/{no}")
 	public String modifyTrainStationData(@PathVariable("no")int no, 
@@ -181,5 +226,15 @@ public class TrainController
 		trainService.modifyTrainLineData(trainLineVo, no);
 		
 		return "redirect:/train/trainLine";
+	}
+	
+	//카테고리 수정 처리
+	@RequestMapping("/trainCategoryModify/{no}")
+	public String modifyTrainCategoryData(@PathVariable("no")int no,
+										@ModelAttribute TrainCategoryVo trainCategoryVo)
+	{
+		trainService.modifyTrainCategoryData(trainCategoryVo, no);
+		
+		return "redirect:/train/trainCategory";
 	}
 }

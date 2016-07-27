@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.estsoft.futures.aradongbros.travelfriend.vo.TrainCategoryVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainInfoVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainLineVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainStationVo;
@@ -32,10 +33,18 @@ public class TrainDao
 		return trainInfoList;
 	}
 	
-	public List<TrainLineVo> selectTrainLineList() {
+	public List<TrainLineVo> selectTrainLineList() 
+	{
 		List<TrainLineVo> trainLineList = sqlSession.selectList("train.selectTrainLine");
 		
 		return trainLineList;
+	}
+	
+	public List<TrainCategoryVo> selectTrainCategoryList() 
+	{
+		List<TrainCategoryVo> trainCategoryList = sqlSession.selectList("train.selectTrainCategory");
+		
+		return trainCategoryList;
 	}
 
 	public void insertTrainStationData(TrainStationVo trainStationVo) 
@@ -52,6 +61,11 @@ public class TrainDao
 	{
 		sqlSession.insert("train.insertTrainLine", trainLineVo);
 	}
+	
+	public void insertTrainCategoryData(TrainCategoryVo trainCategoryVo) 
+	{
+		sqlSession.insert("train.insertTrainCategory", trainCategoryVo);
+	}
 
 	public void deleteTrainStationData(int no) 
 	{
@@ -66,6 +80,11 @@ public class TrainDao
 	public void deleteTrainLineData(int no) 
 	{
 		sqlSession.delete("train.deleteTrainLine", no);
+	}
+	
+	public void deleteTrainCategoryData(int no) 
+	{
+		sqlSession.delete("train.deleteTrainCategory", no);
 	}
 
 	public TrainStationVo selectTrainStationByNo(int no) 
@@ -82,10 +101,18 @@ public class TrainDao
 		return trainInfoVo;
 	}
 	
-	public TrainLineVo selectTrainLineByNo(int no) {
+	public TrainLineVo selectTrainLineByNo(int no) 
+	{
 		TrainLineVo trainLineVo = sqlSession.selectOne("train.selectTrainLineByNo", no);
 		
 		return trainLineVo;
+	}
+	
+	public TrainCategoryVo selectTrainCategoryByNo(int no) 
+	{
+		TrainCategoryVo trainCategoryVo = sqlSession.selectOne("train.selectTrainCategoryByNo", no);
+		
+		return trainCategoryVo;
 	}
 
 	public void modifyTrainStationData(TrainStationVo trainStationVo, int no) 
@@ -97,7 +124,8 @@ public class TrainDao
 		sqlSession.update("train.modifyTrainStation", map);
 	}
 
-	public void modifyTrainInfoData(TrainInfoVo trainInfoVo, int no) {
+	public void modifyTrainInfoData(TrainInfoVo trainInfoVo, int no) 
+	{
 		Map<String, Object> map = new HashMap<>();
 		map.put("trainInfoVo", trainInfoVo);
 		map.put("no", no);
@@ -105,11 +133,21 @@ public class TrainDao
 		sqlSession.update("train.modifyTrainInfo", map);
 	}
 
-	public void modifyTrainLineData(TrainLineVo trainLineVo, int no) {
+	public void modifyTrainLineData(TrainLineVo trainLineVo, int no) 
+	{
 		Map<String, Object> map = new HashMap<>();
 		map.put("trainLineVo", trainLineVo);
 		map.put("no", no);
 		
 		sqlSession.update("train.modifyTrainLine", map);
+	}
+
+	public void modifyTrainCategoryData(TrainCategoryVo trainCategoryVo, int no) 
+	{
+		Map<String, Object> map = new HashMap<>();
+		map.put("trainCategoryVo", trainCategoryVo);
+		map.put("no", no);
+		
+		sqlSession.update("train.modifyTrainCategory", map);
 	}
 }

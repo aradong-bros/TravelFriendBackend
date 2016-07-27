@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.estsoft.futures.aradongbros.travelfriend.dao.TrainDao;
+import com.estsoft.futures.aradongbros.travelfriend.vo.TrainCategoryVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainInfoVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainLineVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainStationVo;
@@ -36,6 +37,13 @@ public class TrainService
 		
 		return trainLineList;
 	}
+	
+	public List<TrainCategoryVo> getTrainCategoryList() 
+	{
+		List<TrainCategoryVo> trainCategoryList = trainDao.selectTrainCategoryList();
+		
+		return trainCategoryList;
+	}
 
 	public void insertTrainStationData(TrainStationVo trainStationVo) 
 	{
@@ -51,6 +59,11 @@ public class TrainService
 	{
 		trainDao.insertTrainLineData(trainLineVo);
 	}
+	
+	public void insertTrainCategoryData(TrainCategoryVo trainCategoryVo) 
+	{
+		trainDao.insertTrainCategoryData(trainCategoryVo);
+	}
 
 	public void deleteTrainStationData(int no) 
 	{
@@ -65,6 +78,11 @@ public class TrainService
 	public void deleteTrainLineData(int no) 
 	{
 		trainDao.deleteTrainLineData(no);
+	}
+	
+	public void deleteTrainCategoryData(int no) 
+	{
+		trainDao.deleteTrainCategoryData(no);
 	}
 
 	public TrainStationVo selectTrainStationByNo(int no) 
@@ -87,17 +105,31 @@ public class TrainService
 		
 		return trainLineVo;
 	}
+	
+	public TrainCategoryVo selectTrainCategoryByNo(int no) 
+	{
+		TrainCategoryVo trainCategoryVo = trainDao.selectTrainCategoryByNo(no);
+		
+		return trainCategoryVo;
+	}
 
 	public void modifyTrainStationData(TrainStationVo trainStationVo, int no) 
 	{
 		trainDao.modifyTrainStationData(trainStationVo, no);
 	}
 
-	public void modifyTrainInfoData(TrainInfoVo trainInfoVo, int no) {
+	public void modifyTrainInfoData(TrainInfoVo trainInfoVo, int no) 
+	{
 		trainDao.modifyTrainInfoData(trainInfoVo, no);
 	}
 
-	public void modifyTrainLineData(TrainLineVo trainLineVo, int no) {
+	public void modifyTrainLineData(TrainLineVo trainLineVo, int no) 
+	{
 		trainDao.modifyTrainLineData(trainLineVo, no);
+	}
+
+	public void modifyTrainCategoryData(TrainCategoryVo trainCategoryVo, int no) 
+	{
+		trainDao.modifyTrainCategoryData(trainCategoryVo, no);
 	}
 }
