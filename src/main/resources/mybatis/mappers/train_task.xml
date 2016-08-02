@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="train_task">
+	<select id="selectStationNo" parameterType="string" resultType="int">
+		<![CDATA[
+		select no from trainStation
+		where `name` = #{stationName}
+		]]>
+	</select>
+	
+	<select id="selectTrainTime" parameterType="map" resultType="trainoperationroutevo">
+		<![CDATA[
+		select o.*
+		from trainOperationRoute o, 
+		(select a.trainInfo_no
+		from 
+		(select trainInfo_no
+		from trainOperationRoute o, trainStation s
+		where o.trainStation_no = #{startStationNo} and o.trainStation_no = s.no
+		order by trainStation_no) a,
+		(select trainInfo_no
+		from trainOperationRoute, trainStation
+		where trainOperationRoute.trainStation_no = #{endStationNo} and trainOperationRoute.trainStation_no = trainStation.no
+		order by trainStation_no) b
+		where a.trainInfo_no = b.trainInfo_no) sub_query
+		where 
+		o.trainInfo_no = sub_query.trainInfo_no and
+		(o.trainStation_no = #{startStationNo} or o.trainStation_no = #{endStationNo}) and
+		o.trainCategory_no = #{categoryNo};
+		]]>
+	</select>
+	
+	<select id="selectStationName" parameterType="int" resultType="string">
+		<![CDATA[
+		select name from trainStation where no = #{trainStation_no}
+		]]>
+	</select>
+</mapper>

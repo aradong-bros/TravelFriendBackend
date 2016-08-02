@@ -1,6 +1,9 @@
 package com.estsoft.futures.aradongbros.travelfriend.controller;
 
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,8 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.estsoft.futures.aradongbros.travelfriend.service.TrainService;
+import com.estsoft.futures.aradongbros.travelfriend.service.TrainTaskService;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainCategoryVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainInfoVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainLineVo;
@@ -22,6 +27,8 @@ public class TrainController
 {
 	@Autowired
 	private TrainService trainService;
+	@Autowired
+	private TrainTaskService trainTaskService;
 	
 	//역 조회 페이지
 	@RequestMapping(value = {"", "/trainStation"})
@@ -291,5 +298,36 @@ public class TrainController
 		trainService.modifyTrainOperationRouteData(trainOperationRouteVo, no);
 		
 		return "redirect:/train/trainOperationRoute";
+	}
+
+	//기차 검색 페이지
+	@RequestMapping("/searchTrainform")
+	public String searchTrainForm()
+	{
+		return "/train_task/searchTrainForm";
+	}
+	
+	//기차 검색 결과 페이지
+	@RequestMapping("/searchTrain")
+	public String searchTrain(
+			Model model,
+			@RequestParam("startStation")String startStation,
+			@RequestParam("endStation")String endStation,
+			@RequestParam("goDate")Date goDate)
+	{
+		List<Map<String, Object>> trainTimeList = trainTaskService.getTrainTimeList(
+				startStation,
+				endStation,
+				goDate);
+		if(trainTimeList == null || trainTimeList.size() == 0){
+			return "/train_task/searchTrainNull";
+		}
+		
+		model.addAttribute("startStation", startStation);
+		model.addAttribute("endStation", endStation);
+		model.addAttribute("goDate", goDate);
+		model.addAttribute("trainTimeList", trainTimeList);
+		
+		return "/train_task/searchTrain";
 	}
 }

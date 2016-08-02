@@ -15,5 +15,6 @@
 	<mappers>
 		<mapper resource="mybatis/mappers/attraction.xml" />   <!-- ~~.xml 파일이 없으면 에러남 -->
 		<mapper resource="mybatis/mappers/train.xml"/>
+		<mapper resource="mybatis/mappers/train_task.xml"/>
 	</mappers>
 </configuration>
