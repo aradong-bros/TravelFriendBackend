@@ -330,4 +330,11 @@ public class TrainController
 		
 		return "/train_task/searchTrain";
 	}
+	
+	//기차 최단시간 검색 페이지
+	@RequestMapping("/searchFastAndEarlyTrainform")
+	public String searchFastAndEarlyTrainForm()
+	{
+		return "/train_task/searchFastAndEarlyTrainForm";
+	}
 }

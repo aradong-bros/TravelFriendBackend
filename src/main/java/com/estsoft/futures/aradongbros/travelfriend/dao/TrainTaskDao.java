@@ -22,13 +22,23 @@ public class TrainTaskDao
 		return no;
 	}
 
-	public List<TrainOperationRouteVo> getTrainTimeList(int startStationNo, int endStationNo, int categoryNo) 
+	public List<TrainOperationRouteVo> getStartTrainTimeList(int startStationNo, int endStationNo, int categoryNo) 
 	{
 		Map<String, Integer> map = new HashMap<>();
 		map.put("startStationNo", startStationNo);
 		map.put("endStationNo", endStationNo);
 		map.put("categoryNo", categoryNo);
-		List<TrainOperationRouteVo> trainTimeList = sqlSession.selectList("train_task.selectTrainTime", map);
+		List<TrainOperationRouteVo> trainTimeList = sqlSession.selectList("train_task.selectStartTrainTime", map);
+		return trainTimeList;
+	}
+	
+	public List<TrainOperationRouteVo> getEndTrainTimeList(int startStationNo, int endStationNo, int categoryNo) 
+	{
+		Map<String, Integer> map = new HashMap<>();
+		map.put("startStationNo", startStationNo);
+		map.put("endStationNo", endStationNo);
+		map.put("categoryNo", categoryNo);
+		List<TrainOperationRouteVo> trainTimeList = sqlSession.selectList("train_task.selectEndTrainTime", map);
 		return trainTimeList;
 	}
 	

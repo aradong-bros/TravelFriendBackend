@@ -30,59 +30,77 @@ public class TrainTaskService
 		int endStationNo = getStationNo(endStation);
 		int weekdayNo = getCategoryNo(goDate);
 		
-		List<TrainOperationRouteVo> trainTimeList = trainTaskDao.getTrainTimeList(startStationNo, endStationNo, 1);
+		List<TrainOperationRouteVo> trainStartTimeList = trainTaskDao.getStartTrainTimeList(startStationNo, endStationNo, 1);
+		List<TrainOperationRouteVo> trainEndTimeList = trainTaskDao.getEndTrainTimeList(startStationNo, endStationNo, 1);
 		
 		switch (weekdayNo) {
-		case 6:
-		case 7:
-		case 1:
-		case 2:
-			trainTimeList.addAll(trainTaskDao.getTrainTimeList(startStationNo, endStationNo, 2));
+		case 6: //월요일
+		case 7: //화요일
+		case 1: //수요일
+		case 2: //목요일
+			trainStartTimeList.addAll(trainTaskDao.getStartTrainTimeList(startStationNo, endStationNo, 2));
+			trainEndTimeList.addAll(trainTaskDao.getEndTrainTimeList(startStationNo, endStationNo, 2));
 			break;
-		case 3:
-			trainTimeList.addAll(trainTaskDao.getTrainTimeList(startStationNo, endStationNo, 2));
-			trainTimeList.addAll(trainTaskDao.getTrainTimeList(startStationNo, endStationNo, 3));
-			trainTimeList.addAll(trainTaskDao.getTrainTimeList(startStationNo, endStationNo, 4));
+		case 3: //금요일
+			trainStartTimeList.addAll(trainTaskDao.getStartTrainTimeList(startStationNo, endStationNo, 2));
+			trainEndTimeList.addAll(trainTaskDao.getEndTrainTimeList(startStationNo, endStationNo, 2));
+			
+			trainStartTimeList.addAll(trainTaskDao.getStartTrainTimeList(startStationNo, endStationNo, 3));
+			trainEndTimeList.addAll(trainTaskDao.getEndTrainTimeList(startStationNo, endStationNo, 3));
+			
+			trainStartTimeList.addAll(trainTaskDao.getStartTrainTimeList(startStationNo, endStationNo, 4));
+			trainEndTimeList.addAll(trainTaskDao.getEndTrainTimeList(startStationNo, endStationNo, 4));
 			break;
-		case 4:
-			trainTimeList.addAll(trainTaskDao.getTrainTimeList(startStationNo, endStationNo, 3));
-			trainTimeList.addAll(trainTaskDao.getTrainTimeList(startStationNo, endStationNo, 4));
-			trainTimeList.addAll(trainTaskDao.getTrainTimeList(startStationNo, endStationNo, 5));
-			trainTimeList.addAll(trainTaskDao.getTrainTimeList(startStationNo, endStationNo, 6));
+		case 4: //토요일
+			trainStartTimeList.addAll(trainTaskDao.getStartTrainTimeList(startStationNo, endStationNo, 3));
+			trainEndTimeList.addAll(trainTaskDao.getEndTrainTimeList(startStationNo, endStationNo, 3));
+			
+			trainStartTimeList.addAll(trainTaskDao.getStartTrainTimeList(startStationNo, endStationNo, 4));
+			trainEndTimeList.addAll(trainTaskDao.getEndTrainTimeList(startStationNo, endStationNo, 4));
+			
+			trainStartTimeList.addAll(trainTaskDao.getStartTrainTimeList(startStationNo, endStationNo, 5));
+			trainEndTimeList.addAll(trainTaskDao.getEndTrainTimeList(startStationNo, endStationNo, 5));
+			
+			trainStartTimeList.addAll(trainTaskDao.getStartTrainTimeList(startStationNo, endStationNo, 6));
+			trainEndTimeList.addAll(trainTaskDao.getEndTrainTimeList(startStationNo, endStationNo, 6));
 			break;
-		case 5:
-			trainTimeList.addAll(trainTaskDao.getTrainTimeList(startStationNo, endStationNo, 3));
-			trainTimeList.addAll(trainTaskDao.getTrainTimeList(startStationNo, endStationNo, 5));
-			trainTimeList.addAll(trainTaskDao.getTrainTimeList(startStationNo, endStationNo, 7));
+		case 5: //일요일
+			trainStartTimeList.addAll(trainTaskDao.getStartTrainTimeList(startStationNo, endStationNo, 3));
+			trainEndTimeList.addAll(trainTaskDao.getEndTrainTimeList(startStationNo, endStationNo, 3));
+			
+			trainStartTimeList.addAll(trainTaskDao.getStartTrainTimeList(startStationNo, endStationNo, 5));
+			trainEndTimeList.addAll(trainTaskDao.getEndTrainTimeList(startStationNo, endStationNo, 5));
+			
+			trainStartTimeList.addAll(trainTaskDao.getStartTrainTimeList(startStationNo, endStationNo, 7));
+			trainEndTimeList.addAll(trainTaskDao.getEndTrainTimeList(startStationNo, endStationNo, 7));
 			break;
-		default:
+		default: //?
 			break;
 		}
 		
-		if(trainTimeList.size()==0 || trainTimeList == null) return null;
+		if(trainStartTimeList.size()==0 || 
+				trainStartTimeList == null || 
+				trainStartTimeList.size() != trainEndTimeList.size()){
+			return null;
+		}
 		
 		List<Map<String, Object>> mappedTrainTimeList = new ArrayList<>();
 		
-		for(int i=0; i<trainTimeList.size(); i+=2){
-			TrainOperationRouteVo startVo = trainTimeList.get(i);
-			TrainOperationRouteVo endVo = trainTimeList.get(i+1);
-			TrainInfoVo trainInfoVo = trainDao.selectTrainInfoByNo(startVo.getTrainInfo_no());
-			
-			if(startVo.getTrainInfo_no() != endVo.getTrainInfo_no()) return null;
-			if(startVo.getTrainStation_no() != startStationNo) continue;
+		for(int i=0; i<trainStartTimeList.size(); i++){
+			TrainInfoVo trainInfoVo = trainDao.selectTrainInfoByNo(trainStartTimeList.get(i).getTrainInfo_no());
 			
 			Map<String, Object> map = new HashMap<>();
-			map.put("startStationName", trainTaskDao.getStationName(startVo.getTrainStation_no()));
-			map.put("endStationName", trainTaskDao.getStationName(endVo.getTrainStation_no()));
-			map.put("departureTime", startVo.getDepartureTime());
-			map.put("arrivalTime", endVo.getDepartureTime());
+			map.put("startStationName", trainTaskDao.getStationName(trainStartTimeList.get(i).getTrainStation_no()));
+			map.put("endStationName", trainTaskDao.getStationName(trainEndTimeList.get(i).getTrainStation_no()));
+			map.put("departureTime", trainStartTimeList.get(i).getDepartureTime());
+			map.put("arrivalTime", trainEndTimeList.get(i).getDepartureTime());
 			map.put("trainNum", trainInfoVo.getTrainNum());
 			map.put("trainModel", trainInfoVo.getTrainModel());
 			
-			int startHour = startVo.getDepartureTime().getHours();
-			int startMinut = startVo.getDepartureTime().getMinutes();
-			int endHour = endVo.getDepartureTime().getHours();
-			int endMinut = endVo.getDepartureTime().getMinutes();
+			int startHour = trainStartTimeList.get(i).getDepartureTime().getHours();
+			int startMinut = trainStartTimeList.get(i).getDepartureTime().getMinutes();
+			int endHour = trainEndTimeList.get(i).getDepartureTime().getHours();
+			int endMinut = trainEndTimeList.get(i).getDepartureTime().getMinutes();
 			int startTime = (startHour*60) + startMinut;
 			int endTime = (endHour*60) + endMinut;
 			if(startTime > endTime) endTime += (24*60);
