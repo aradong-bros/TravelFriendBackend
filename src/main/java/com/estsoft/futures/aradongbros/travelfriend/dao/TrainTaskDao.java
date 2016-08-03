@@ -16,12 +16,6 @@ public class TrainTaskDao
 	@Autowired
 	private SqlSession sqlSession;
 
-	public Integer getStationNo(String stationName) 
-	{
-		Integer no = sqlSession.selectOne("train_task.selectStationNo", stationName);
-		return no;
-	}
-
 	public List<TrainOperationRouteVo> getStartTrainTimeList(int startStationNo, int endStationNo, int categoryNo) 
 	{
 		Map<String, Integer> map = new HashMap<>();
@@ -40,6 +34,32 @@ public class TrainTaskDao
 		map.put("categoryNo", categoryNo);
 		List<TrainOperationRouteVo> trainTimeList = sqlSession.selectList("train_task.selectEndTrainTime", map);
 		return trainTimeList;
+	}
+	
+	public List<TrainOperationRouteVo> getStartFastAndEarlyTrainTimeList(int startStationNo, int endStationNo, int categoryNo)
+	{
+		Map<String, Integer> map = new HashMap<>();
+		map.put("startStationNo", startStationNo);
+		map.put("endStationNo", endStationNo);
+		map.put("categoryNo", categoryNo);
+		List<TrainOperationRouteVo> trainTimeList = sqlSession.selectList("train_task.selectStartFastAndEarlyTrainTime", map);
+		return trainTimeList;
+	}
+	
+	public List<TrainOperationRouteVo> getEndFastAndEarlyTrainTimeList(int startStationNo, int endStationNo, int categoryNo)
+	{
+		Map<String, Integer> map = new HashMap<>();
+		map.put("startStationNo", startStationNo);
+		map.put("endStationNo", endStationNo);
+		map.put("categoryNo", categoryNo);
+		List<TrainOperationRouteVo> trainTimeList = sqlSession.selectList("train_task.selectEndFastAndEarlyTrainTime", map);
+		return trainTimeList;
+	}
+	
+	public Integer getStationNo(String stationName) 
+	{
+		Integer no = sqlSession.selectOne("train_task.selectStationNo", stationName);
+		return no;
 	}
 	
 	public String getStationName(int trainStation_no)

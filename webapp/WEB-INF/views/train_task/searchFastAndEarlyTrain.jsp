@@ -31,13 +31,13 @@
 		</tr>
 		
 		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>${timeMap.startStationName}</td>
+			<td>${timeMap.endStationName}</td>
+			<td>${timeMap.departureTime}</td>
+			<td>${timeMap.arrivalTime}</td>
+			<td>${timeMap.trainNum}</td>
+			<td>${timeMap.trainModel}</td>
+			<td>${timeMap.operationTime}</td>
 		</tr>
 	</table>
 </body>

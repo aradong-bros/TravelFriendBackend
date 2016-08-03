@@ -7,7 +7,7 @@
 <title>기차 최단시간 조회</title>
 </head>
 <body>
-	<h1>기차 시간 조회</h1>
+	<h1>기차 최단시간 조회</h1>
 	<form id="searchFastAndEarlyTrainForm" action="${pageContext.request.contextPath}/train/searchFastAndEarlyTrain" method="post">
 		<table border="1" style="text-align:center;">
 			<tr>

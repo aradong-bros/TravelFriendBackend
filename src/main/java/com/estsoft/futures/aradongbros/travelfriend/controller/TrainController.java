@@ -337,4 +337,28 @@ public class TrainController
 	{
 		return "/train_task/searchFastAndEarlyTrainForm";
 	}
+	
+	//기차 최단시간 검색 결과
+	@RequestMapping("/searchFastAndEarlyTrain")
+	public String searchFastAndEarlyTrain(
+			Model model,
+			@RequestParam("startStation")String startStation,
+			@RequestParam("endStation")String endStation,
+			@RequestParam("goDate")Date goDate)
+	{
+		List<Map<String, Object>> trainTimeList = trainTaskService.getFastAndEarlyTrainTimeList(
+				startStation,
+				endStation,
+				goDate);
+		if(trainTimeList == null || trainTimeList.size() == 0){
+			return "/train_task/searchTrainNull";
+		}
+		
+		model.addAttribute("startStation", startStation);
+		model.addAttribute("endStation", endStation);
+		model.addAttribute("goDate", goDate);
+		model.addAttribute("timeMap", trainTimeList.get(0));
+		
+		return "/train_task/searchFastAndEarlyTrain";
+	}
 }

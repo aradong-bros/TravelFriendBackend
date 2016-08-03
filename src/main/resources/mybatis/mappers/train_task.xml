@@ -38,4 +38,32 @@
 			and start.trainCategory_no = end.trainCategory_no;
 		]]>
 	</select>
+	
+	<select id="selectStartFastAndEarlyTrainTime" parameterType="map" resultType="trainoperationroutevo">
+		<![CDATA[
+		select start.* from 
+			(select * from trainOperationRoute where trainStation_no = #{startStationNo}) start,
+			(select * from trainOperationRoute where trainStation_no = #{endStationNo}) end
+		where start.trainInfo_no = end.trainInfo_no 
+			and start.order < end.order 
+			and start.trainCategory_no = #{categoryNo}
+			and start.trainCategory_no = end.trainCategory_no
+		order by ( if( end.departureTime<start.departureTime, ((hour(end.departureTime)+24)*60+minute(end.departureTime)), (hour(end.departureTime)*60+minute(end.departureTime)) ) - (hour(start.departureTime)*60+minute(start.departureTime)) )
+		limit 0,5;
+		]]>
+	</select>
+	
+	<select id="selectEndFastAndEarlyTrainTime" parameterType="map" resultType="trainoperationroutevo">
+		<![CDATA[
+		select end.* from 
+			(select * from trainOperationRoute where trainStation_no = #{startStationNo}) start,
+			(select * from trainOperationRoute where trainStation_no = #{endStationNo}) end
+		where start.trainInfo_no = end.trainInfo_no 
+			and start.order < end.order 
+			and start.trainCategory_no = #{categoryNo}
+			and start.trainCategory_no = end.trainCategory_no
+		order by ( if( end.departureTime<start.departureTime, ((hour(end.departureTime)+24)*60+minute(end.departureTime)), (hour(end.departureTime)*60+minute(end.departureTime)) ) - (hour(start.departureTime)*60+minute(start.departureTime)) )
+		limit 0,5;
+		]]>
+	</select>
 </mapper>
