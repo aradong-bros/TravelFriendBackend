@@ -18,6 +18,7 @@ import com.estsoft.futures.aradongbros.travelfriend.dao.TrainDao;
 import com.estsoft.futures.aradongbros.travelfriend.dao.TrainTaskDao;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainInfoVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainOperationRouteVo;
+import com.estsoft.futures.aradongbros.travelfriend.vo.TrainStationVo;
 
 @Service
 public class TrainTaskService 
@@ -26,7 +27,48 @@ public class TrainTaskService
 	private TrainTaskDao trainTaskDao;
 	@Autowired
 	private TrainDao trainDao;
-
+	
+	//출발시간이 빠른 순으로 정렬
+	static class DepTimeASCCompare implements Comparator<Map<String,Object>>{
+		@Override
+		public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+			Time t1 = (Time) o1.get("departureTime");
+			Time t2 = (Time) o2.get("departureTime");
+			return t1.compareTo(t2);
+		}
+	}
+	
+	//거리가 짧은 순으로 정렬
+	static class DistanceASCCompare implements Comparator<Map<String, Object>>{
+		@Override
+		public int compare(Map<String, Object> distanceMap1, Map<String, Object> distanceMap2) {
+			Double d1 = (Double) distanceMap1.get("distance");
+			Double d2 = (Double) distanceMap2.get("distance");
+			return d1.compareTo(d2);
+		}
+	}
+	
+	public Integer getStationNo(String stationName)
+	{
+		Integer no = trainTaskDao.getStationNo(stationName);
+		
+		if(no == null || no == 0) return 0;
+		else return no;
+	}
+	
+	public Integer getCategoryNo(Date goDate)
+	{
+		Calendar c = Calendar.getInstance();
+		c.setTime(goDate);
+		Integer dayOfWeek = c.get(Calendar.DAY_OF_WEEK); //수요일부터 1, 목2, 금3, 토4, 일5, 월6, 화7
+		return dayOfWeek;
+	}
+	
+	//두 점 사이에 거리 구하기
+	public double getDistance(double x, double y, double x1, double y1){
+		return Math.sqrt(Math.pow(Math.abs(x1-x), 2) + Math.pow(Math.abs(y1-y), 2));
+	}
+	
 	public List<Map<String, Object>> getTrainTimeList(String startStation, String endStation, Date goDate) 
 	{
 		int startStationNo = getStationNo(startStation);
@@ -206,29 +248,28 @@ public class TrainTaskService
 		
 		return mappedTrainTimeList;
 	}
-	
-	public Integer getStationNo(String stationName)
-	{
-		Integer no = trainTaskDao.getStationNo(stationName);
+
+	public List<Map<String, Object>> getNearStationAtLocation(double latitude, double longitude, int cityNum) {
+		List<TrainStationVo> cityStationList = trainTaskDao.getCityStationList(cityNum);
+		System.out.println(cityStationList);
+		List<Map<String, Object>> distanceMapList = new ArrayList<>();
 		
-		if(no == null || no == 0) return 0;
-		else return no;
-	}
-	
-	public Integer getCategoryNo(Date goDate)
-	{
-		Calendar c = Calendar.getInstance();
-		c.setTime(goDate);
-		Integer dayOfWeek = c.get(Calendar.DAY_OF_WEEK); //수요일부터 1, 목2, 금3, 토4, 일5, 월6, 화7
-		return dayOfWeek;
-	}
-	
-	static class DepTimeASCCompare implements Comparator<Map<String,Object>>{
-		@Override
-		public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-			Time t1 = (Time) o1.get("departureTime");
-			Time t2 = (Time) o2.get("departureTime");
-			return t1.compareTo(t2);
+		for(int i=0; i<cityStationList.size(); i++){
+			TrainStationVo trainStationVo = cityStationList.get(i);
+			String stationLocation = trainStationVo.getLocation();
+			String stationLocationSplit[] = stationLocation.split(",");
+			double stationLatitude = Double.parseDouble(stationLocationSplit[0]);
+			double stationLongitude = Double.parseDouble(stationLocationSplit[1]);
+			
+			Map<String, Object> distanceMap = new HashMap<>();
+			distanceMap.put("stationName", trainStationVo.getName());
+			distanceMap.put("distance", getDistance(stationLatitude, stationLongitude, latitude, longitude));
+			
+			distanceMapList.add(distanceMap);
 		}
+		
+		Collections.sort(distanceMapList, new DistanceASCCompare());
+		
+		return distanceMapList;
 	}
 }

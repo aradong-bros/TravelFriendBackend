@@ -66,4 +66,12 @@
 		limit 0,5;
 		]]>
 	</select>
+	
+	<select id="selectTrainStationByCityNo" parameterType="int" resultType="trainstationvo">
+		<![CDATA[
+		select * from
+			trainStation
+		where cityNum = #{cityNum}
+		]]>
+	</select>
 </mapper>

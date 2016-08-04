@@ -361,4 +361,30 @@ public class TrainController
 		
 		return "/train_task/searchFastAndEarlyTrain";
 	}
+	
+	//위치 근처 기차역 검색 페이지
+	@RequestMapping("/searchNearStationAtLocationform")
+	public String searchNearStationAtLocationform()
+	{
+		return "/train_task/searchNearStationAtLocationForm";
+	}
+	
+	//위치 근처 기차역 검색
+	@RequestMapping("/searchNearStationAtLocation")
+	public String searchNearStationAtLocation(
+			Model model, 
+			@RequestParam("location")String location,
+			@RequestParam("cityNum")int cityNum)
+	{
+		String locationSplit[] = location.split(",");
+		double latitude = Double.parseDouble(locationSplit[0]);
+		double longitude = Double.parseDouble(locationSplit[1]);
+		
+		List<Map<String, Object>> distanceMapList = trainTaskService.getNearStationAtLocation(latitude,longitude,cityNum);
+		
+		model.addAttribute("distanceMapList", distanceMapList);
+		model.addAttribute("location", location);
+		
+		return "/train_task/searchNearStationAtLocation";
+	}
 }

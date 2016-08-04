@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainOperationRouteVo;
+import com.estsoft.futures.aradongbros.travelfriend.vo.TrainStationVo;
 
 @Repository
 public class TrainTaskDao 
@@ -67,5 +68,12 @@ public class TrainTaskDao
 		String stationName = sqlSession.selectOne("train_task.selectStationName", trainStation_no);
 		
 		return stationName;
+	}
+
+	public List<TrainStationVo> getCityStationList(int cityNum) 
+	{
+		List<TrainStationVo> stationList = sqlSession.selectList("train_task.selectTrainStationByCityNo", cityNum);
+		System.out.println(stationList);
+		return stationList;
 	}
 }
