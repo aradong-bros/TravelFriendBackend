@@ -48,6 +48,16 @@ public class TrainTaskService
 		}
 	}
 	
+	//걸린시간이 짧은 순으로 정렬
+	static class OperationTimeASCCompare implements Comparator<Map<String,Object>>{
+		@Override
+		public int compare(Map<String,Object>o1, Map<String,Object> o2){
+			Time t1 = (Time) o1.get("operationTime");
+			Time t2 = (Time) o2.get("operationTime");
+			return t1.compareTo(t2);
+		}
+	}
+	
 	public Integer getStationNo(String stationName)
 	{
 		Integer no = trainTaskDao.getStationNo(stationName);
@@ -64,20 +74,8 @@ public class TrainTaskService
 		return dayOfWeek;
 	}
 	
-	//두 점 사이에 거리 구하기
-	public double getDistance(double x, double y, double x1, double y1){
-		return Math.sqrt(Math.pow(Math.abs(x1-x), 2) + Math.pow(Math.abs(y1-y), 2));
-	}
-	
-	public List<Map<String, Object>> getTrainTimeList(String startStation, String endStation, Date goDate) 
+	public void getTrainListByWeekday(int startStationNo, int endStationNo, int weekdayNo, List<TrainOperationRouteVo> trainStartTimeList, List<TrainOperationRouteVo> trainEndTimeList)
 	{
-		int startStationNo = getStationNo(startStation);
-		int endStationNo = getStationNo(endStation);
-		int weekdayNo = getCategoryNo(goDate);
-		
-		List<TrainOperationRouteVo> trainStartTimeList = trainTaskDao.getStartTrainTimeList(startStationNo, endStationNo, 1);
-		List<TrainOperationRouteVo> trainEndTimeList = trainTaskDao.getEndTrainTimeList(startStationNo, endStationNo, 1);
-		
 		switch (weekdayNo) {
 		case 6: //월요일
 		case 7: //화요일
@@ -122,6 +120,165 @@ public class TrainTaskService
 		default: //?
 			break;
 		}
+	}
+	
+	public List<Map<String, Object>> transferMethod(
+			int startStationNo, int endStationNo, int transferStationNo, int weekdayNo, Time goTime)
+	{
+		//진짜 뿌릴 맵 리스트 생성
+		List<Map<String, Object>> timeMap = new ArrayList<>();
+		
+		//시작역, 환승역(도착) 운행정보 리스트 생성
+		List<TrainOperationRouteVo> startList = trainTaskDao.getStartTrainTimeAfterList(startStationNo, transferStationNo, 1, goTime);
+		List<TrainOperationRouteVo> transferEndList = trainTaskDao.getTransferEndTrainTimeList(startStationNo, transferStationNo, 1, goTime);
+		
+		switch (weekdayNo) {
+		case 6: //월
+		case 7: //화
+		case 1: //수
+		case 2: //목
+			startList.addAll(trainTaskDao.getStartTrainTimeAfterList(startStationNo, transferStationNo, 2, goTime));
+			transferEndList.addAll(trainTaskDao.getTransferEndTrainTimeList(startStationNo, transferStationNo, 2, goTime));
+			break;
+		case 3:
+			startList.addAll(trainTaskDao.getStartTrainTimeAfterList(startStationNo, transferStationNo, 2, goTime));
+			transferEndList.addAll(trainTaskDao.getTransferEndTrainTimeList(startStationNo, transferStationNo, 2, goTime));
+			
+			startList.addAll(trainTaskDao.getStartTrainTimeAfterList(startStationNo, transferStationNo, 3, goTime));
+			transferEndList.addAll(trainTaskDao.getTransferEndTrainTimeList(startStationNo, transferStationNo, 3, goTime));
+			
+			startList.addAll(trainTaskDao.getStartTrainTimeAfterList(startStationNo, transferStationNo, 4, goTime));
+			transferEndList.addAll(trainTaskDao.getTransferEndTrainTimeList(startStationNo, transferStationNo, 4, goTime));
+			break;
+		case 4:
+			startList.addAll(trainTaskDao.getStartTrainTimeAfterList(startStationNo, transferStationNo, 3, goTime));
+			transferEndList.addAll(trainTaskDao.getTransferEndTrainTimeList(startStationNo, transferStationNo, 3, goTime));
+			
+			startList.addAll(trainTaskDao.getStartTrainTimeAfterList(startStationNo, transferStationNo, 4, goTime));
+			transferEndList.addAll(trainTaskDao.getTransferEndTrainTimeList(startStationNo, transferStationNo, 4, goTime));
+			
+			startList.addAll(trainTaskDao.getStartTrainTimeAfterList(startStationNo, transferStationNo, 5, goTime));
+			transferEndList.addAll(trainTaskDao.getTransferEndTrainTimeList(startStationNo, transferStationNo, 5, goTime));
+			
+			startList.addAll(trainTaskDao.getStartTrainTimeAfterList(startStationNo, transferStationNo, 6, goTime));
+			transferEndList.addAll(trainTaskDao.getTransferEndTrainTimeList(startStationNo, transferStationNo, 6, goTime));
+			break;
+		case 5:
+			startList.addAll(trainTaskDao.getStartTrainTimeAfterList(startStationNo, transferStationNo, 3, goTime));
+			transferEndList.addAll(trainTaskDao.getTransferEndTrainTimeList(startStationNo, transferStationNo, 3, goTime));
+			
+			startList.addAll(trainTaskDao.getStartTrainTimeAfterList(startStationNo, transferStationNo, 5, goTime));
+			transferEndList.addAll(trainTaskDao.getTransferEndTrainTimeList(startStationNo, transferStationNo, 5, goTime));
+			
+			startList.addAll(trainTaskDao.getStartTrainTimeAfterList(startStationNo, transferStationNo, 7, goTime));
+			transferEndList.addAll(trainTaskDao.getTransferEndTrainTimeList(startStationNo, transferStationNo, 7, goTime));
+			break;
+		default:
+			break;
+		}
+		
+		//환승역(출발), 도착역 운행정보 리스트 넣으면서 timeMap 작업도 같이함
+		for (int i=0; i<transferEndList.size(); i++) { //TransferEndTrainOperation
+			//환승역(도착)에 따라 환승역(출발), 도착역 운행정보 리스트 생성
+			List<TrainOperationRouteVo> transferStartList = new ArrayList<>();
+			List<TrainOperationRouteVo> endList = new ArrayList<>();
+			
+			TrainOperationRouteVo TETO = transferEndList.get(i);
+			transferStartList.addAll(trainTaskDao.getTransferStartTrainTimeList(transferStationNo, endStationNo, 1, TETO.getDepartureTime()));
+			endList.addAll(trainTaskDao.getEndTrainTimeAfterList(transferStationNo, endStationNo, 1, TETO.getDepartureTime()));
+			
+			switch (weekdayNo) {
+			case 6:
+			case 7:
+			case 1:
+			case 2:
+				transferStartList.addAll(trainTaskDao.getTransferStartTrainTimeList(transferStationNo, endStationNo, 2, TETO.getDepartureTime()));
+				endList.addAll(trainTaskDao.getEndTrainTimeAfterList(transferStationNo, endStationNo, 2, TETO.getDepartureTime()));
+				break;
+			case 3:
+				transferStartList.addAll(trainTaskDao.getTransferStartTrainTimeList(transferStationNo, endStationNo, 2, TETO.getDepartureTime()));
+				endList.addAll(trainTaskDao.getEndTrainTimeAfterList(transferStationNo, endStationNo, 2, TETO.getDepartureTime()));
+				
+				transferStartList.addAll(trainTaskDao.getTransferStartTrainTimeList(transferStationNo, endStationNo, 3, TETO.getDepartureTime()));
+				endList.addAll(trainTaskDao.getEndTrainTimeAfterList(transferStationNo, endStationNo, 3, TETO.getDepartureTime()));
+				
+				transferStartList.addAll(trainTaskDao.getTransferStartTrainTimeList(transferStationNo, endStationNo, 4, TETO.getDepartureTime()));
+				endList.addAll(trainTaskDao.getEndTrainTimeAfterList(transferStationNo, endStationNo, 4, TETO.getDepartureTime()));
+				break;
+			case 4:
+				transferStartList.addAll(trainTaskDao.getTransferStartTrainTimeList(transferStationNo, endStationNo, 3, TETO.getDepartureTime()));
+				endList.addAll(trainTaskDao.getEndTrainTimeAfterList(transferStationNo, endStationNo, 3, TETO.getDepartureTime()));
+				
+				transferStartList.addAll(trainTaskDao.getTransferStartTrainTimeList(transferStationNo, endStationNo, 4, TETO.getDepartureTime()));
+				endList.addAll(trainTaskDao.getEndTrainTimeAfterList(transferStationNo, endStationNo, 4, TETO.getDepartureTime()));
+				
+				transferStartList.addAll(trainTaskDao.getTransferStartTrainTimeList(transferStationNo, endStationNo, 5, TETO.getDepartureTime()));
+				endList.addAll(trainTaskDao.getEndTrainTimeAfterList(transferStationNo, endStationNo, 5, TETO.getDepartureTime()));
+				
+				transferStartList.addAll(trainTaskDao.getTransferStartTrainTimeList(transferStationNo, endStationNo, 6, TETO.getDepartureTime()));
+				endList.addAll(trainTaskDao.getEndTrainTimeAfterList(transferStationNo, endStationNo, 6, TETO.getDepartureTime()));
+				break;
+			case 5:
+				transferStartList.addAll(trainTaskDao.getTransferStartTrainTimeList(transferStationNo, endStationNo, 3, TETO.getDepartureTime()));
+				endList.addAll(trainTaskDao.getEndTrainTimeAfterList(transferStationNo, endStationNo, 3, TETO.getDepartureTime()));
+				
+				transferStartList.addAll(trainTaskDao.getTransferStartTrainTimeList(transferStationNo, endStationNo, 5, TETO.getDepartureTime()));
+				endList.addAll(trainTaskDao.getEndTrainTimeAfterList(transferStationNo, endStationNo, 5, TETO.getDepartureTime()));
+				
+				transferStartList.addAll(trainTaskDao.getTransferStartTrainTimeList(transferStationNo, endStationNo, 7, TETO.getDepartureTime()));
+				endList.addAll(trainTaskDao.getEndTrainTimeAfterList(transferStationNo, endStationNo, 7, TETO.getDepartureTime()));
+				break;
+			default:
+				break;
+			}
+			
+			for(int j=0; j<endList.size(); j++){
+				Map<String, Object> map = new HashMap<>();
+				map.put("startStationName", trainTaskDao.getStationName(startList.get(i).getTrainStation_no()));
+				map.put("transferStationName", trainTaskDao.getStationName(TETO.getTrainStation_no()));
+				map.put("endStationName", trainTaskDao.getStationName(endList.get(j).getTrainStation_no()));
+				map.put("departureTime", startList.get(i).getDepartureTime());
+				map.put("transferStationArrivalTime", TETO.getDepartureTime());
+				map.put("transferStationDepartureTime", transferStartList.get(j).getDepartureTime());
+				map.put("arrivalTime", endList.get(j).getDepartureTime());
+				map.put("trainNum", trainDao.selectTrainInfoByNo(startList.get(i).getTrainInfo_no()).getTrainNum());
+				map.put("transferTrainNum", trainDao.selectTrainInfoByNo(transferStartList.get(j).getTrainInfo_no()).getTrainNum());
+				map.put("trainModel", trainDao.selectTrainInfoByNo(startList.get(i).getTrainInfo_no()).getTrainModel());
+				map.put("transferTrainModel", trainDao.selectTrainInfoByNo(transferStartList.get(j).getTrainInfo_no()).getTrainModel());
+				
+				int startHour = startList.get(i).getDepartureTime().getHours();
+				int startMinut = startList.get(i).getDepartureTime().getMinutes();
+				int endHour = endList.get(j).getDepartureTime().getHours();
+				int endMinut = endList.get(j).getDepartureTime().getMinutes();
+				int startTime = (startHour*60) + startMinut;
+				int endTime = (endHour*60) + endMinut;
+				if(startTime > endTime) endTime += (24*60);
+				int operationTime = endTime - startTime;
+				map.put("operationTime", new Time(operationTime/60, operationTime%60, 0));
+				
+				timeMap.add(map);
+			}
+		}
+		
+		return timeMap;
+	}
+	
+	//두 점 사이에 거리 구하기
+	public double getDistance(double x, double y, double x1, double y1)
+	{
+		return Math.sqrt(Math.pow(Math.abs(x1-x), 2) + Math.pow(Math.abs(y1-y), 2));
+	}
+	
+	public List<Map<String, Object>> getTrainTimeList(String startStation, String endStation, Date goDate) 
+	{
+		int startStationNo = getStationNo(startStation);
+		int endStationNo = getStationNo(endStation);
+		int weekdayNo = getCategoryNo(goDate);
+		
+		List<TrainOperationRouteVo> trainStartTimeList = trainTaskDao.getStartTrainTimeList(startStationNo, endStationNo, 1);
+		List<TrainOperationRouteVo> trainEndTimeList = trainTaskDao.getEndTrainTimeList(startStationNo, endStationNo, 1);
+		
+		getTrainListByWeekday(startStationNo, endStationNo, weekdayNo, trainStartTimeList, trainEndTimeList);
 		
 		if(trainStartTimeList.size()==0 || 
 				trainStartTimeList == null || 
@@ -251,7 +408,6 @@ public class TrainTaskService
 
 	public List<Map<String, Object>> getNearStationAtLocation(double latitude, double longitude, int cityNum) {
 		List<TrainStationVo> cityStationList = trainTaskDao.getCityStationList(cityNum);
-		System.out.println(cityStationList);
 		List<Map<String, Object>> distanceMapList = new ArrayList<>();
 		
 		for(int i=0; i<cityStationList.size(); i++){
@@ -271,5 +427,20 @@ public class TrainTaskService
 		Collections.sort(distanceMapList, new DistanceASCCompare());
 		
 		return distanceMapList;
+	}
+	
+	public List<Map<String, Object>> getTransferTrainTimeList(String startStation, String endStation, Date goDate, Time goTime)
+	{
+		int startStationNo = getStationNo(startStation);
+		int endStationNo = getStationNo(endStation);
+		int weekdayNo = getCategoryNo(goDate);
+		
+		List<Map<String, Object>> mappedTrainTimeList = new ArrayList<>();
+		List<Integer> transferStationList = trainTaskDao.getTransferStationList(startStationNo, endStationNo);
+		for (Integer transferStationNo : transferStationList) {
+			mappedTrainTimeList.addAll(transferMethod(startStationNo, endStationNo, transferStationNo, weekdayNo, goTime));
+		}
+		
+		return mappedTrainTimeList;
 	}
 }

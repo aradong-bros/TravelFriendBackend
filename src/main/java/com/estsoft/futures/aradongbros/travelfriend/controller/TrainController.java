@@ -1,9 +1,13 @@
 package com.estsoft.futures.aradongbros.travelfriend.controller;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+
+import javax.activation.CommandMap;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.estsoft.futures.aradongbros.travelfriend.service.TrainService;
 import com.estsoft.futures.aradongbros.travelfriend.service.TrainTaskService;
@@ -369,7 +374,7 @@ public class TrainController
 		return "/train_task/searchNearStationAtLocationForm";
 	}
 	
-	//위치 근처 기차역 검색
+	//위치 근처 기차역 검색 결과
 	@RequestMapping("/searchNearStationAtLocation")
 	public String searchNearStationAtLocation(
 			Model model, 
@@ -386,5 +391,57 @@ public class TrainController
 		model.addAttribute("location", location);
 		
 		return "/train_task/searchNearStationAtLocation";
+	}
+	
+	//환승 기차 검색 페이지
+	@RequestMapping("/searchTransferTrainform")
+	public String searchTransferTrainForm()
+	{
+		return "/train_task/searchTransferTrainForm";
+	}
+	
+	//환승 기차 검색 결과
+	@RequestMapping("/searchTransferTrain")
+	public String searchTransferTrain(
+			Model model,
+			@RequestParam("startStation")String startStation,
+			@RequestParam("endStation")String endStation,
+			@RequestParam("goDate")Date goDate,
+			@RequestParam("goTime")String goTimeString)
+	{
+		String goTimeStrings[] = goTimeString.split(":");
+		int hour = Integer.parseInt(goTimeStrings[0]);
+		int minute = Integer.parseInt(goTimeStrings[1]);
+		Time goTime = new Time(hour, minute, 0);
+		List<Map<String, Object>> trainTimeList = trainTaskService.getTransferTrainTimeList(
+				startStation,
+				endStation,
+				goDate,
+				goTime);
+		if(trainTimeList == null || trainTimeList.size() == 0){
+			return "/train_task/searchTrainNull";
+		}
+		
+		model.addAttribute("startStation", startStation);
+		model.addAttribute("endStation", endStation);
+		model.addAttribute("goDate", goDate);
+		model.addAttribute("trainTimeList", trainTimeList);
+		
+		return "/train_task/searchTransferTrain";
+	}
+	
+	//파일 업로드 샘플
+	@RequestMapping("/fileForm")
+	public String fileForm()
+	{
+		return "/file/fileForm";
+	}
+	
+	@RequestMapping("/file")
+	@ResponseBody
+	public String file(CommandMap commandMap, HttpServletRequest request) throws Exception
+	{
+		
+		return "컨트롤러에 들어옴";
 	}
 }
