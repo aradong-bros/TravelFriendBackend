@@ -1,8 +1,11 @@
 package com.estsoft.futures.aradongbros.travelfriend.controller;
 
+import java.io.File;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.estsoft.futures.aradongbros.travelfriend.service.TrainService;
 import com.estsoft.futures.aradongbros.travelfriend.service.TrainTaskService;
@@ -25,6 +30,8 @@ import com.estsoft.futures.aradongbros.travelfriend.vo.TrainInfoVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainLineVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainOperationRouteVo;
 import com.estsoft.futures.aradongbros.travelfriend.vo.TrainStationVo;
+
+import util.CommonUtils;
 
 @Controller
 @RequestMapping("/train")
@@ -436,11 +443,34 @@ public class TrainController
 	{
 		return "/file/fileForm";
 	}
-	
 	@RequestMapping("/file")
 	@ResponseBody
-	public String file(CommandMap commandMap, HttpServletRequest request) throws Exception
+	public String file(HttpServletRequest request) throws Exception
 	{
+		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
+		Iterator<String> iterator = multipartHttpServletRequest.getFileNames();
+		
+		MultipartFile multipartFile = null;
+		String originalFileName = null;
+		String originalFileExtension = null;
+		String storedFileName = null;
+		
+		File file = new File("C:/temp/");
+		if(file.exists() == false){
+			file.mkdirs();
+		}
+		
+		while (iterator.hasNext()) {
+			multipartFile = multipartHttpServletRequest.getFile(iterator.next());
+			if(multipartFile.isEmpty() == false){
+				originalFileName = multipartFile.getOriginalFilename();
+				originalFileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+				storedFileName = CommonUtils.getRandomString() + originalFileExtension;
+				
+				file = new File("C:/temp/" + storedFileName);
+				multipartFile.transferTo(file);
+			}
+		}
 		
 		return "컨트롤러에 들어옴";
 	}

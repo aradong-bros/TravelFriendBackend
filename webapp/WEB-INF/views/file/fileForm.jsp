@@ -7,7 +7,7 @@
 <title>파일 입력 샘플</title>
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/train/file" enctype="multipart/form-data">
+<form action="${pageContext.request.contextPath}/train/file" enctype="multipart/form-data" method="post">
 	<input type="file" name="fileName">
 	<input type="submit" value="업로드">
 </form>
